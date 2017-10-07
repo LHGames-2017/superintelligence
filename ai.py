@@ -1,5 +1,6 @@
 from flask import Flask, request
 from structs import *
+from pathFinder import PathFinder
 import json
 import numpy
 
@@ -34,7 +35,7 @@ def deserialize_map(serialized_map):
     serialized_map = serialized_map[1:]
     rows = serialized_map.split('[')
     column = rows[0].split('{')
-    deserialized_map = [[Tile() for x in range(40)] for y in range(40)]
+    deserialized_map = [[Tile() for x in range(20)] for y in range(20)]
     for i in range(len(rows) - 1):
         column = rows[i + 1].split('{')
 
@@ -83,8 +84,12 @@ def bot():
 
             otherPlayers.append({player_name: player_info })
 
+    pos = PathFinder(deserialized_map).getPath(player.Position, player.Position + Point(3,3))[0]
+    print "From {}".format(player.Position)
+    print "To {}".format(pos)
+
     # return decision
-    return create_move_action(Point(0,1))
+    return create_move_action(pos)
 
 @app.route("/", methods=["POST"])
 def reponse():
