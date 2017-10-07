@@ -23,9 +23,8 @@ def print_tile(tile):
         tileDisplayStr = 'P'
     else:
         tileDisplayStr = ' '
-    #print(padding + tileDisplayStr + padding),
-    # TODO For know, actually display the struct (Cuz struc is not the one in doc)
-    print(padding + str(content) + padding),
+    print(padding + tileDisplayStr + padding),
+    #print(padding + str(content) + padding), # To use in case of Enum is destroyed
 
 def print_map(deserialized_map) :
     """ Print the whole map """
