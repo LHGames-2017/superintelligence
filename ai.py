@@ -5,12 +5,11 @@ import json
 import numpy
 
 from gameHelper import *
-from PlayerSession import *
 from GameSession import *
 
 app = Flask(__name__)
 gameSession = GameSession()
-gameSession.playerSession = PlayerSession(None)
+
 
 def create_action(action_type, target):
     actionContent = ActionContent(action_type, target.__dict__)
@@ -82,9 +81,6 @@ def bot():
     serialized_map = map_json["CustomSerializedMap"]
     deserialized_map = deserialize_map(serialized_map)
 
-    # Print
-    print_game(deserialized_map, player)
-
     otherPlayers = []
 
     for player_dict in map_json["OtherPlayers"]:
@@ -97,20 +93,28 @@ def bot():
 
             otherPlayers.append({player_name: player_info })
 
+    # Update Game session
+    gameSession.updateTurnData(player, deserialized_map)
 
-    # return decision
+    # Return decision
+    coco = gameSession.playerSession
+    if(coco.isFull()):
+        coco.setTarget(coco.playerData.HouseLocation)
+    else:
+        target = scanNeighbourhood(deserialized_map, player)
+        coco.setTarget(target)
 
-    gameSession.frameCounter += 1
-    print(gameSession.frameCounter)
 
-    target = scanNeighbourhood(deserialized_map, player)
-    print player.Position
-    print target
-    print "Path Find"
-    moves = PathFinder(deserialized_map).getPath(player.Position, target)
+    moves = PathFinder(deserialized_map).getPath(player.Position, coco.target)
+
+    # Print all
+    print_game(gameSession)
 
     if len(moves) == 1:
-        return create_collect_action(moves[0])
+        if(coco.isFull):
+            return create_move_action(coco.target)
+        else:
+            return create_collect_action(moves[0])
     else:
         return create_move_action(moves[0])
 
@@ -120,8 +124,7 @@ def scanNeighbourhood(deserialized_map, player):
             if deserialized_map[y][x].Content == 4:
                 tile = deserialized_map[y][x]
                 return Point(tile.X, tile.Y)
-                
-    return player.Position - Point(1,0)
+    return player.Position + Point(0,5)
 
 def carryHome(player):
 

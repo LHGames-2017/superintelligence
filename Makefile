@@ -7,3 +7,7 @@ build:
 
 build-deps:
 	sudo docker build . -t polyhx/python-seed
+
+clean:
+	-rm -f *.pyc
+	-rm -rf __pychache__
