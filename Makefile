@@ -10,4 +10,4 @@ build-deps:
 
 clean:
 	-rm -f *.pyc
-	-rm -rf __pychache__
+	-rm -rf __pycache__
