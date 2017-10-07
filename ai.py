@@ -84,15 +84,14 @@ def bot():
 
     otherPlayers = []
 
-    for player_dict in map_json["OtherPlayers"]:
-        for player_name in plasyer_dict.keys():
-            player_info = player_dict[player_name]
+    for players in map_json["OtherPlayers"]:
+            player_info = players["Value"]
             p_pos = player_info["Position"]
             player_info = PlayerInfo(player_info["Health"],
                                      player_info["MaxHealth"],
                                      Point(p_pos["X"], p_pos["Y"]))
 
-            otherPlayers.append({player_name: player_info })
+            otherPlayers.append(player_info)
 
     # Update Game session
     gameSession.updateTurnData(player, deserialized_map)
