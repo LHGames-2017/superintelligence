@@ -52,6 +52,9 @@ def print_game(gameSession) :
 
     print("--------------------------------------------------------------------------------")
     print("Player health: " + str(player.Health))
+    print("Player resources: " + str(player.CarriedRessources))
+    print("Player capacity: " + str(player.CarryingCapacity))
+    print("Player isFull: " + str(gameSession.playerSession.isFull()))
     print("")
     print("Turn counter: " + str(gameSession.turnCounter))
     print("--------------------------------------------------------------------------------\n\n")

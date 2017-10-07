@@ -97,8 +97,14 @@ def bot():
     gameSession.updateTurnData(player, deserialized_map)
 
     # Return decision
-    #target = scanNeighbourhood(deserialized_map, player)
-    target = Point(26,28) #TODO Debug
+    coco = gameSession.playerSession
+    if(coco.isFull()):
+        coco.setTarget(coco.playerData.HouseLocation)
+    else:
+        #target = scanNeighbourhood(deserialized_map, player)
+        target = Point(26,28) #TODO Debug
+        coco.setTarget(target)
+
     gameSession.playerSession.setTarget(target)
     pos = PathFinder(deserialized_map).getPath(player.Position, target)[0]
 
