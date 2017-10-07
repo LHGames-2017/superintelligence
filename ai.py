@@ -4,6 +4,9 @@ from pathFinder import PathFinder
 import json
 import numpy
 
+from gameHelper import *
+from PlayerSession import *
+
 app = Flask(__name__)
 
 def create_action(action_type, target):
@@ -64,13 +67,20 @@ def bot():
     x = pos["X"]
     y = pos["Y"]
     house = p["HouseLocation"]
-    player = Player(p["Health"], p["MaxHealth"], Point(x,y),
+    player = Player(p["Health"],
+                    p["MaxHealth"],
+                    Point(x,y),
                     Point(house["X"], house["Y"]),
-                    p["CarriedResources"], p["CarryingCapacity"])
+                    p["CarriedResources"],
+                    p["CarryingCapacity"])
 
     # Map
     serialized_map = map_json["CustomSerializedMap"]
     deserialized_map = deserialize_map(serialized_map)
+
+
+    # Print
+    print_game(deserialized_map, player)
 
     otherPlayers = []
 
@@ -89,7 +99,22 @@ def bot():
     print "To {}".format(pos)
 
     # return decision
-    return create_move_action(pos)
+    carryHome(player)
+    scanNeighbourhood(deserialized_map)
+    return create_move_action(Point(0,1))
+
+def scanNeighbourhood(deserialized_map):
+    for i in range(len(deserialized_map)):
+        for j in range(len(deserialized_map[0])):
+            if deserialized_map[i][j].Content == TileContent.Resource:
+                return create_move_action(Point(i, j))
+    # TODO move if there is no resource on the deserialized map
+
+def carryHome(player):
+
+    if player.CarriedRessources == player.CarryingCapacity:
+        return create_move_action(player.HouseLocation)  # TODO use playerSession to pass the path
+
 
 @app.route("/", methods=["POST"])
 def reponse():
@@ -99,4 +124,5 @@ def reponse():
     return bot()
 
 if __name__ == "__main__":
+    playerSession = PlayerSession(None)
     app.run(host="0.0.0.0", port=8080)
