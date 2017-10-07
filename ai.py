@@ -3,6 +3,8 @@ from structs import *
 import json
 import numpy
 
+from gameHelper import *
+
 app = Flask(__name__)
 
 def create_action(action_type, target):
@@ -34,7 +36,7 @@ def deserialize_map(serialized_map):
     serialized_map = serialized_map[1:]
     rows = serialized_map.split('[')
     column = rows[0].split('{')
-    deserialized_map = [[Tile() for x in range(40)] for y in range(40)]
+    deserialized_map = [[Tile() for x in range(20)] for y in range(20)]
     for i in range(len(rows) - 1):
         column = rows[i + 1].split('{')
 
@@ -47,6 +49,7 @@ def deserialize_map(serialized_map):
             deserialized_map[i][j] = Tile(content, x, y)
 
     return deserialized_map
+
 
 def bot():
     """
@@ -71,6 +74,8 @@ def bot():
     serialized_map = map_json["CustomSerializedMap"]
     deserialized_map = deserialize_map(serialized_map)
 
+    print_map(deserialized_map)
+
     otherPlayers = []
 
     for player_dict in map_json["OtherPlayers"]:
@@ -94,4 +99,4 @@ def reponse():
     return bot()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    app.run(host="localhost", port=8080)

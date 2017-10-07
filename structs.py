@@ -13,7 +13,7 @@ class TileType():
 
 
 class TileContent():
-    Empty, Resource, House, Player, Wall, Lava, Shop = range(7)
+    Empty, Wall, House, Lava, Resource, Shop, Player = range(7)
 
 
 class Point(object):
@@ -59,8 +59,8 @@ class Tile(object):
 
 class Player(object):
 
-    def __init__(self, health, maxHealth, position, houseLocation, score, carriedRessources,
-                 carryingCapacity=1000):
+    def __init__(self, health, maxHealth, position, houseLocation, score,
+                 carriedRessources, carryingCapacity=1000):
         self.Health = health
         self.MaxHealth = maxHealth
         self.Position = position
@@ -81,4 +81,4 @@ class ActionContent(object):
 
     def __init__(self, action_name, content):
         self.ActionName = action_name
-        self.Content = {}
+        self.Content = str(content)
