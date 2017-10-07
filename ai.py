@@ -98,7 +98,14 @@ def bot():
 
     # Return decision
     coco = gameSession.playerSession
+
+    #TODO To change by states
+    #actionToDo = coco.state.actionOneTurn()
+    #print_game(gameSession)
+    #return actionToDo
+
     actionToDo = create_move_action(coco.playerData.Position)
+
 
     if(coco.isFull()):
         # If coco is full of resources, go back home
@@ -130,9 +137,8 @@ def scanNeighbourhood(deserialized_map, player):
             if deserialized_map[y][x].Content == 4:
                 tile = deserialized_map[y][x]
                 ressourcesTiles.append(Point(tile.X, tile.Y))
-                print Point(tile.X, tile.Y)
 
-    minDistance = sys.maxint 
+    minDistance = sys.maxint
     target = player.Position + Point(0,5)
     for x in ressourcesTiles:
         distance = Point().Distance(x, player.Position)
@@ -140,12 +146,6 @@ def scanNeighbourhood(deserialized_map, player):
             minDistance = distance
             target = x
     return target
-
-def carryHome(player):
-
-    if player.CarriedRessources == player.CarryingCapacity:
-        return create_move_action(player.HouseLocation)  # TODO use playerSession to pass the path
-
 
 @app.route("/", methods=["POST"])
 def reponse():

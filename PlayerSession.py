@@ -1,9 +1,12 @@
 import math
+from PlayerState import *
 
 class PlayerSession:
     def __init__(self, player):
         self.playerData = player
         self.target = None
+        self.mapView = None
+        self.state = Look4Resources(self)
 
     def setTarget(self, position):
         self.target = position
