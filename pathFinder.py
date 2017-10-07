@@ -30,6 +30,8 @@ class Solution:
     def addNode(self, node):
         self.visited.append(Point(node.tile.X, node.tile.Y))
         self.cost += 1
+        if node.tile.Content == TileContent.Wall:
+            self.cost += 5
 
 
     def printSolution(self):
@@ -46,7 +48,7 @@ class PathFinder:
 
 
     def isValid(self,tile):
-        return tile.Content not in [TileContent.Lava, TileContent.Wall, TileContent.Shop]
+        return tile.Content not in [TileContent.Lava, TileContent.Shop]
 
     def getValidNeighbors(self, pos):
 
@@ -88,10 +90,8 @@ class PathFinder:
             frontier.put(Node(x, goal, initialSolution))
         
         while not frontier.empty():
-            print "Start {}".format(start)
-            print "Goal {}".format(goal)
             currentNode = frontier.get()
-            #print Point(currentNode.tile.X, currentNode.tile.Y)
+
             currentNode.solution.printSolution()
             if currentNode.tile.X == goal.X and currentNode.tile.Y == goal.Y:
                 return currentNode.solution.visited
