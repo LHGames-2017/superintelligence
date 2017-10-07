@@ -48,10 +48,9 @@ class PathFinder:
 
 
     def isValid(self,tile):
-        return tile.Content not in [TileContent.Lava, TileContent.Shop]
+        return tile.Content not in [TileContent.Lava, TileContent.Wall, TileContent.Resource, TileContent.Shop]
 
-    def getValidNeighbors(self, pos):
-
+    def getNeighbors(self, pos):
         relativePosition = Point(pos.X, pos.Y) - Point(self.map[0][0].X, self.map[0][0].Y)
 
 
@@ -66,11 +65,24 @@ class PathFinder:
         if relativePosition.Y-1 >= 0:  
             neighbors.append(self.map[relativePosition.X][relativePosition.Y - 1])
 
+        return neighbors
+
+
+    def getValidNeighbors(self, pos):
+        neighbors = self.getNeighbors(pos)
+        
         validNeighbors = []
         for i in range(len(neighbors)):
             if self.isValid(neighbors[i]):
                 validNeighbors.append(neighbors[i])
         return validNeighbors
+
+    def isGoalInNeighbors(self, pos, goal):
+        neighbors = self.getNeighbors(pos)
+        for x in neighbors:
+            if x.X == goal.X and x.Y == goal.Y:
+                return True
+        return False
     
 
     def getPath(self, start, goal):
@@ -83,6 +95,8 @@ class PathFinder:
         initialSolution = Solution()
         if current.X == goal.X and current.Y == goal.Y:
             return []
+        elif self.isGoalInNeighbors(current, goal):
+            return [goal]
 
         frontier = PriorityQueue() 
 
@@ -91,9 +105,8 @@ class PathFinder:
         
         while not frontier.empty():
             currentNode = frontier.get()
-
-            currentNode.solution.printSolution()
-            if currentNode.tile.X == goal.X and currentNode.tile.Y == goal.Y:
+            if self.isGoalInNeighbors(currentNode.tile, goal):
+                currentNode.solution.visited.append(goal)
                 return currentNode.solution.visited
 
             for x in self.getValidNeighbors(currentNode.tile):
