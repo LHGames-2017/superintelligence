@@ -3,6 +3,7 @@ from structs import *
 from pathFinder import PathFinder
 import json
 import numpy
+import sys
 
 from gameHelper import *
 from GameSession import *
@@ -98,33 +99,44 @@ def bot():
 
     # Return decision
     coco = gameSession.playerSession
+
     if(coco.isFull()):
         coco.setTarget(coco.playerData.HouseLocation)
+        print coco.playerData.HouseLocation
     else:
         target = scanNeighbourhood(deserialized_map, player)
         coco.setTarget(target)
 
-
-    moves = PathFinder(deserialized_map).getPath(player.Position, coco.target)
-
     # Print all
     print_game(gameSession)
 
+    moves = PathFinder(deserialized_map).getPath(player.Position, coco.target)
+
     if len(moves) == 1:
         if(coco.isFull):
-            return create_move_action(coco.target)
+            return create_move_action(moves[0])
         else:
             return create_collect_action(moves[0])
     else:
         return create_move_action(moves[0])
 
 def scanNeighbourhood(deserialized_map, player):
+    ressourcesTiles = []
     for y in range(len(deserialized_map)):
         for x in range(len(deserialized_map[0])):
             if deserialized_map[y][x].Content == 4:
                 tile = deserialized_map[y][x]
-                return Point(tile.X, tile.Y)
-    return player.Position + Point(0,5)
+                ressourcesTiles.append(Point(tile.X, tile.Y))
+                print Point(tile.X, tile.Y)
+
+    minDistance = sys.maxint 
+    target = player.Position + Point(0,5)
+    for x in ressourcesTiles:
+        distance = Point().Distance(x, player.Position)
+        if distance < minDistance:
+            minDistance = distance
+            target = x
+    return target
 
 def carryHome(player):
 

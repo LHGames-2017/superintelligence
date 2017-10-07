@@ -79,6 +79,8 @@ class PathFinder:
 
         current = start
         initialSolution = Solution()
+        if current.X == goal.X and current.Y == goal.Y:
+            return []
 
         frontier = PriorityQueue() 
 
@@ -86,8 +88,11 @@ class PathFinder:
             frontier.put(Node(x, goal, initialSolution))
         
         while not frontier.empty():
+            print "Start {}".format(start)
+            print "Goal {}".format(goal)
             currentNode = frontier.get()
-
+            #print Point(currentNode.tile.X, currentNode.tile.Y)
+            currentNode.solution.printSolution()
             if currentNode.tile.X == goal.X and currentNode.tile.Y == goal.Y:
                 return currentNode.solution.visited
 
