@@ -84,7 +84,21 @@ def bot():
             otherPlayers.append({player_name: player_info })
 
     # return decision
+    carryHome(player)
+    scanNeighbourhood(deserialized_map)
     return create_move_action(Point(0,1))
+
+def scanNeighbourhood(deserialized_map):
+    for i in range(len(deserialized_map)):
+        for j in range(len(deserialized_map[0])):
+            if deserialized_map[i][j].Content == TileContent.Resource:
+                return create_move_action(Point(i, j))
+
+def carryHome(player):
+
+    if player.CarriedRessources == player.CarryingCapacity:
+        return create_move_action(player.HouseLocation)
+
 
 @app.route("/", methods=["POST"])
 def reponse():
@@ -94,4 +108,4 @@ def reponse():
     return bot()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    app.run(host="0.0.0.0", port=8080)
