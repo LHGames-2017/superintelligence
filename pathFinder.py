@@ -1,7 +1,22 @@
 from queue import PriorityQueue
+from structs import *
 
 class PathFinder:
 	
+	class Node:
+
+		def __init__(self, tile, goal, cost):
+			self.heristic_cost = getHeuristicCost(goal)
+			self.tile = tile
+
+		def getHeuristicCost(self, goal):
+			goalPoint = Point(goal.x, goal.y)
+			self.heuristicCost = Point.Distance(goalPoint, Point(self.tile.x, self.tile.y))
+
+		def __gt__(self, other):
+			return self.heuristicCost < other.heuristicCost
+
+
 	def __init__(self, map):
 		self.map = map
 
@@ -10,11 +25,18 @@ class PathFinder:
 		current = start
 		
 		frontier = PriorityQueue() 
-		frontier.put((x.node, x.cost) for x in getValidNeighbors(current))
+		frontier.put(Node(x,goal) for x in getValidNeighbors(current))
 		
 		while len(frontier) > 0:
 			current = frontier.pop()
 
 	def getValidNeighbors(self, pos):
-		for i in range(-1,2):
-			for j in range(-1,2):
+		midPoint = len(map)/2
+		neighbors = [map[midPoint][midPoint+1], map[midPoint][midPoint-1], map[midPoint-1][midPoint], map[midPoint+1][midPoint]]
+		for x in neighbors:
+			if not isValid(x):
+				del x
+		return neighbors
+
+	def isValid(self,tile):
+		return tile.content not in [TileContent.Lava, TileContent.Wall, TileContent.Shop]
