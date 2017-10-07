@@ -99,26 +99,30 @@ def bot():
 
     # Return decision
     coco = gameSession.playerSession
+    actionToDo = create_move_action(coco.playerData.Position)
 
     if(coco.isFull()):
+        # If coco is full of resources, go back home
         coco.setTarget(coco.playerData.HouseLocation)
-        print coco.playerData.HouseLocation
+        moves = PathFinder(deserialized_map).getPath(player.Position, coco.target)
+        actionToDo = create_move_action(moves[0])
+
+    elif(coco.isAtHome() and coco.hasResources()):
+        # Is giving back resource to home
+        actionToDo = create_move_action(coco.playerData.HouseLocation)
+
     else:
-        target = scanNeighbourhood(deserialized_map, player)
-        coco.setTarget(target)
+        coco.setTarget(scanNeighbourhood(deserialized_map, player))
+        moves = PathFinder(deserialized_map).getPath(player.Position, coco.target)
+
+        if len(moves) == 1:
+            actionToDo = create_collect_action(moves[0])
+        else:
+            actionToDo = create_move_action(moves[0])
 
     # Print all
     print_game(gameSession)
-
-    moves = PathFinder(deserialized_map).getPath(player.Position, coco.target)
-
-    if len(moves) == 1:
-        if(coco.isFull):
-            return create_move_action(moves[0])
-        else:
-            return create_collect_action(moves[0])
-    else:
-        return create_move_action(moves[0])
+    return actionToDo
 
 def scanNeighbourhood(deserialized_map, player):
     ressourcesTiles = []

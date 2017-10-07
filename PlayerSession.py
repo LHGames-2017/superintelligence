@@ -12,3 +12,14 @@ class PlayerSession:
         carried = self.playerData.CarriedRessources
         capacity = self.playerData.CarryingCapacity
         return carried >= capacity
+
+    def hasResources(self):
+        carried = self.playerData.CarriedRessources
+        capacity = self.playerData.CarryingCapacity
+        return carried > 0
+
+    def isAtHome(self):
+        coco = self.playerData.Position
+        home = self.playerData.HouseLocation
+        return coco.X == home.X and coco.Y == home.Y
+
