@@ -130,7 +130,6 @@ def scanNeighbourhood(deserialized_map, player):
             if deserialized_map[y][x].Content == 4:
                 tile = deserialized_map[y][x]
                 ressourcesTiles.append(Point(tile.X, tile.Y))
-                print Point(tile.X, tile.Y)
 
     minDistance = sys.maxint 
     target = player.Position + Point(0,5)
