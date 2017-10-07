@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7
 
-def print_tile(tile, player):
+def print_tile(tile, player, gameSession):
     """ Print one tile acccording to TileContent enum """
     content = tile.Content
     padding = ' '
@@ -29,19 +29,30 @@ def print_tile(tile, player):
         tileDisplayStr = 'E'
     else:
         tileDisplayStr = ' '
-    print(padding + tileDisplayStr + padding),
+
+    # Special display for targeted position
+    if(gameSession.playerSession.target != None
+            and tile.X == gameSession.playerSession.target.X
+            and tile.Y == gameSession.playerSession.target.Y):
+        print("(" + tileDisplayStr + ")"),
+    else:
+        print(padding + tileDisplayStr + padding),
     #print(padding + str(content) + padding), # To use in case of Enum is destroyed
 
-def print_game(deserialized_map, player) :
+def print_game(gameSession) :
     """ Print the whole map """
+    gameViewMap = gameSession.gameViewMap
+    player = gameSession.playerSession.playerData
     print("\n\n ----------------------------------- MAP -----------------------------------\n\n")
 
-    for y in range(len(deserialized_map)):
-        for x in range(len(deserialized_map[0])):
-            print_tile(deserialized_map[x][y], player),
+    for y in range(len(gameViewMap)):
+        for x in range(len(gameViewMap[0])):
+            print_tile(gameViewMap[x][y], player, gameSession),
         print("\n")
 
     print("--------------------------------------------------------------------------------")
     print("Player health: " + str(player.Health))
+    print("")
+    print("Turn counter: " + str(gameSession.turnCounter))
     print("--------------------------------------------------------------------------------\n\n")
 

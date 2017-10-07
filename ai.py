@@ -5,12 +5,11 @@ import json
 import numpy
 
 from gameHelper import *
-from PlayerSession import *
 from GameSession import *
 
 app = Flask(__name__)
 gameSession = GameSession()
-gameSession.playerSession = PlayerSession(None)
+
 
 def create_action(action_type, target):
     actionContent = ActionContent(action_type, target.__dict__)
@@ -82,9 +81,6 @@ def bot():
     serialized_map = map_json["CustomSerializedMap"]
     deserialized_map = deserialize_map(serialized_map)
 
-    # Print
-    print_game(deserialized_map, player)
-
     otherPlayers = []
 
     for player_dict in map_json["OtherPlayers"]:
@@ -97,13 +93,17 @@ def bot():
 
             otherPlayers.append({player_name: player_info })
 
+    # Update Game session
+    gameSession.updateTurnData(player, deserialized_map)
 
-    # return decision
-    target = scanNeighbourhood(deserialized_map, player)
+    # Return decision
+    #target = scanNeighbourhood(deserialized_map, player)
+    target = Point(26,28) #TODO Debug
+    gameSession.playerSession.setTarget(target)
     pos = PathFinder(deserialized_map).getPath(player.Position, target)[0]
 
-    gameSession.frameCounter += 1
-    print(gameSession.frameCounter)
+    # Print all
+    print_game(gameSession)
     return create_move_action(Point(0,1))
 
 def scanNeighbourhood(deserialized_map, player):
@@ -112,8 +112,9 @@ def scanNeighbourhood(deserialized_map, player):
             if deserialized_map[y][x].Content == 4:
                 tile = deserialized_map[y][x]
                 return Point(tile.X, tile.Y)
-                #return player.Position + Point(0,1)
-    return Point(25, 25)
+
+    return Point(25, 25) #TODO DEBUG
+    #return player.Position + Point(0,1)
 
 def carryHome(player):
 
