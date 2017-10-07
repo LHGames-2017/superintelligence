@@ -99,11 +99,12 @@ def scanNeighbourhood(deserialized_map):
         for j in range(len(deserialized_map[0])):
             if deserialized_map[i][j].Content == TileContent.Resource:
                 return create_move_action(Point(i, j))
+    # TODO move if there is no resource on the deserialized map
 
 def carryHome(player):
 
     if player.CarriedRessources == player.CarryingCapacity:
-        return create_move_action(player.HouseLocation)
+        return create_move_action(player.HouseLocation)  # TODO use playerSession to pass the path
 
 
 @app.route("/", methods=["POST"])
