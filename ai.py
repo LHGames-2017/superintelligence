@@ -4,6 +4,7 @@ import json
 import numpy
 
 from gameHelper import *
+from PlayerSession import *
 
 app = Flask(__name__)
 
@@ -65,9 +66,12 @@ def bot():
     x = pos["X"]
     y = pos["Y"]
     house = p["HouseLocation"]
-    player = Player(p["Health"], p["MaxHealth"], Point(x,y),
+    player = Player(p["Health"],
+                    p["MaxHealth"],
+                    Point(x,y),
                     Point(house["X"], house["Y"]),
-                    p["CarriedResources"], p["CarryingCapacity"])
+                    p["CarriedResources"],
+                    p["CarryingCapacity"])
 
     # Map
     serialized_map = map_json["CustomSerializedMap"]
@@ -75,7 +79,7 @@ def bot():
 
 
     # Print
-    print_map(deserialized_map)
+    print_game(deserialized_map, player)
 
     otherPlayers = []
 
@@ -114,4 +118,5 @@ def reponse():
     return bot()
 
 if __name__ == "__main__":
+    playerSession = PlayerSession(None)
     app.run(host="0.0.0.0", port=8080)
