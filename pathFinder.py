@@ -106,10 +106,7 @@ class PathFinder:
         while not frontier.empty():
             currentNode = frontier.get()
             if self.isGoalInNeighbors(currentNode.tile, goal):
-                print "DOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONNNNNNNE"
                 currentNode.solution.visited.append(goal)
-                currentNode.solution.printSolution()
-
                 return currentNode.solution.visited
 
             for x in self.getValidNeighbors(currentNode.tile):
