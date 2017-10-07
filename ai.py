@@ -88,7 +88,7 @@ def bot():
     otherPlayers = []
 
     for player_dict in map_json["OtherPlayers"]:
-        for player_name in player_dict.keys():
+        for player_name in plasyer_dict.keys():
             player_info = player_dict[player_name]
             p_pos = player_info["Position"]
             player_info = PlayerInfo(player_info["Health"],
@@ -99,12 +99,20 @@ def bot():
 
 
     # return decision
-    target = scanNeighbourhood(deserialized_map, player)
-    pos = PathFinder(deserialized_map).getPath(player.Position, target)[0]
 
     gameSession.frameCounter += 1
     print(gameSession.frameCounter)
-    return create_move_action(Point(0,1))
+
+    target = scanNeighbourhood(deserialized_map, player)
+    print player.Position
+    print target
+    print "Path Find"
+    moves = PathFinder(deserialized_map).getPath(player.Position, target)
+
+    if len(moves) == 1:
+        return create_collect_action(moves[0])
+    else:
+        return create_move_action(moves[0])
 
 def scanNeighbourhood(deserialized_map, player):
     for y in range(len(deserialized_map)):
@@ -112,8 +120,8 @@ def scanNeighbourhood(deserialized_map, player):
             if deserialized_map[y][x].Content == 4:
                 tile = deserialized_map[y][x]
                 return Point(tile.X, tile.Y)
-                #return player.Position + Point(0,1)
-    return Point(25, 25)
+                
+    return player.Position - Point(1,0)
 
 def carryHome(player):
 

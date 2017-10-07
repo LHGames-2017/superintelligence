@@ -52,6 +52,7 @@ class PathFinder:
 
         relativePosition = Point(pos.X, pos.Y) - Point(self.map[0][0].X, self.map[0][0].Y)
 
+
         neighbors = []
 
         if relativePosition.X+1 < len(self.map): 
@@ -63,14 +64,19 @@ class PathFinder:
         if relativePosition.Y-1 >= 0:  
             neighbors.append(self.map[relativePosition.X][relativePosition.Y - 1])
 
-        for x in neighbors:
-            if not self.isValid(x):
-                del x
-        return neighbors
+        validNeighbors = []
+        for i in range(len(neighbors)):
+            if self.isValid(neighbors[i]):
+                validNeighbors.append(neighbors[i])
+        return validNeighbors
     
 
     def getPath(self, start, goal):
         
+        # minPoint = Point(self.map[0][0].X, self.map[0][0].Y)
+        # maxPoint = Point(self.map[len(self.map) - 1][len(self.map[0]) - 1].X, self.map[len(self.map) - 1][len(self.map[0]) - 1].Y)
+        # goal = Point(min(max(minPoint.X,goal.X), maxPoint.X), min(max(minPoint.Y, goal.Y),maxPoint.Y))
+
         current = start
         initialSolution = Solution()
 
@@ -85,10 +91,10 @@ class PathFinder:
             if currentNode.tile.X == goal.X and currentNode.tile.Y == goal.Y:
                 return currentNode.solution.visited
 
-            
-
             for x in self.getValidNeighbors(currentNode.tile):
                 frontier.put(Node(x, goal, currentNode.solution))
+
+        return []
 
 
     
