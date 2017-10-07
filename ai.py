@@ -108,23 +108,6 @@ def bot():
     print_game(gameSession)
     return actionToDo
 
-def scanNeighbourhood(deserialized_map, player):
-    ressourcesTiles = []
-    for y in range(len(deserialized_map)):
-        for x in range(len(deserialized_map[0])):
-            if deserialized_map[y][x].Content == 4:
-                tile = deserialized_map[y][x]
-                ressourcesTiles.append(Point(tile.X, tile.Y))
-
-    minDistance = sys.maxint
-    target = player.Position + Point(0,5)
-    for x in ressourcesTiles:
-        distance = Point().Distance(x, player.Position)
-        if distance < minDistance:
-            minDistance = distance
-            target = x
-    return target
-
 @app.route("/", methods=["POST"])
 def reponse():
     """

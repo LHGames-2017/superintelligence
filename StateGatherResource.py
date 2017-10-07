@@ -1,4 +1,5 @@
 from PlayerState import *
+from pathFinder import PathFinder
 
 class GatherResource(PlayerState):
     """ State Implementation: has a resource target and go for it """
@@ -9,5 +10,12 @@ class GatherResource(PlayerState):
         self.player.target(resource)
 
     def doAction(self):
-        print("TODO")
+        origin = player.Position;
+        target = self.player.target
+        moves = PathFinder(deserialized_map).getPath(origin, target)
+        # If as reached the resource
+        if len(moves) == 1:
+            return create_collect_action(moves[0])
+        else:
+            return create_move_action(moves[0])
 
