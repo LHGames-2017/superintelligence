@@ -72,41 +72,15 @@ def bot():
             otherPlayers.append(player_info)
 
     # Update Game session
+    gameSession.playerSession.updateServerData(player, deserialized_map)
     gameSession.updateTurnData(player, deserialized_map)
 
-    # Return decision
+    # Update state / Do action
     coco = gameSession.playerSession
-
-    #TODO To change by states
-    #actionToDo = coco.state.actionOneTurn()
-    #print_game(gameSession)
-    #return actionToDo
-
-    actionToDo = create_move_action(coco.playerData.Position)
-
-
-    if(coco.isFull()):
-        # If coco is full of resources, go back home
-        coco.setTarget(coco.playerData.HouseLocation)
-        moves = PathFinder(deserialized_map).getPath(player.Position, coco.target)
-        actionToDo = create_move_action(moves[0])
-
-    elif(coco.isAtHome() and coco.hasResources()):
-        # Is giving back resource to home
-        actionToDo = create_move_action(coco.playerData.HouseLocation)
-
-    else:
-        coco.setTarget(scanNeighbourhood(deserialized_map, player))
-        moves = PathFinder(deserialized_map).getPath(player.Position, coco.target)
-
-        if len(moves) == 1:
-            actionToDo = create_collect_action(moves[0])
-        else:
-            actionToDo = create_move_action(moves[0])
-
-    # Print all
+    actionToDo = coco.state.doAction()
     print_game(gameSession)
     return actionToDo
+
 
 @app.route("/", methods=["POST"])
 def reponse():

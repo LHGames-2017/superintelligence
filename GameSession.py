@@ -4,7 +4,7 @@ class GameSession:
 
     def __init__(self):
         self.turnCounter        = 0
-        self.playerSession      = PlayerSession(None)
+        self.playerSession      = PlayerSession()
         self.gameViewMap        = None
 
     def updateTurnData(self, player, gamemap):

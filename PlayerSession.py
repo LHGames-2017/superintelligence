@@ -3,11 +3,15 @@ from PlayerState import *
 from StateLook4Resources import *
 
 class PlayerSession:
-    def __init__(self, player):
-        self.playerData = player
-        self.target     = None
+    def __init__(self):
+        self.playerData = None
         self.mapView    = None
+        self.target     = None
         self.state      = StateLook4Resources(self)
+
+    def updateServerData(self, player, mapView):
+        self.playerData = player
+        self.mapView    = mapView
 
     def setTarget(self, position):
         self.target = position
