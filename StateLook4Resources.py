@@ -18,7 +18,6 @@ class StateLook4Resources(PlayerState):
             self.player.state = StateGoHome(self.player)
             return self.player.state.doAction()
 
-
         mapView         = self.player.mapView
         allResources    = self.getAllResources()
 

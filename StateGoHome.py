@@ -18,7 +18,7 @@ class StateGoHome(PlayerState):
         # If player just gave the resource home, look 4 resources again
         if(not self.player.hasResources()):
             self.player.state = StateLook4Resources(self.player)
-            return self.player.state.doAction()
+            return create_purchase_action(0)
         return create_move_action(moves[0])
 
     def toString():
